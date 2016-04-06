@@ -45,13 +45,21 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AuthorizationTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VK.NET\VK.NET.csproj">
+      <Project>{86f2ca6c-cb62-48f6-bdc1-02abcae08cf3}</Project>
+      <Name>VK.NET</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
