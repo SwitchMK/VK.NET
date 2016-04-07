@@ -34,8 +34,7 @@ namespace VK.NET
 
             JToken jToken = JToken.Parse(json);
             var audioList = jToken["response"].Children()
-                .Skip(0)
-                    .Select(c => c.ToObject<Audio>()).ToList();
+                  .Select(c => c.ToObject<Audio>()).ToList();
 
             return audioList;
         }
@@ -52,7 +51,10 @@ namespace VK.NET
                 string json = await dataProvider.GetJsonString(method, property);
 
                 var jToken = JToken.Parse(json);
-                var lyrics = jToken.SelectToken("response").SelectToken("text").Value<string>();
+                var lyrics = jToken
+                    .SelectToken("response")
+                    .SelectToken("text")
+                    .Value<string>();
 
                 return lyrics;
             }
@@ -72,7 +74,10 @@ namespace VK.NET
                 string json = await dataProvider.GetJsonString(method, property);
 
                 var jToken = JToken.Parse(json);
-                var lyrics = jToken.SelectToken("response").SelectToken("text").Value<string>();
+                var lyrics = jToken
+                    .SelectToken("response")
+                    .SelectToken("text")
+                    .Value<string>();
 
                 return lyrics;
             }
@@ -82,26 +87,73 @@ namespace VK.NET
 
         // Getting audiolist by passing needed id 
         // like {owner_id}_{audio_id}
-        public static async Task<List<Audio>> GetById(string token, params string[] audios)
+        public static async Task<List<Audio>> GetById(string token, params Value[] audios)
         {
             if (audios.Length != 0)
             {
                 var method = new Method("audio.getById", token);
                 var dataProvider = new DataProvider();
                 var property = new Property("audios", String.Join(",", audios));
-                string json = await dataProvider.GetJsonString(method, property);
+
+                string json = await dataProvider
+                    .GetJsonString(method, property);
 
                 var jToken = JToken.Parse(json);
 
-                var partialAudiosList = jToken.SelectToken("response").
-                    Children().
-                        Skip(0).
-                            Select(a => a.ToObject<Audio>()).ToList();
+                var partialAudiosList = jToken
+                    .SelectToken("response")
+                    .Children()
+                    .Select(a => a.ToObject<Audio>())
+                    .ToList();
 
                 return partialAudiosList;
             }
 
             throw new Exception();
+        }
+
+        // Search method realization
+        public static async Task<List<Audio>> Search(string token, Search search)
+        {
+            var dataProvider = new DataProvider();
+            var properties = new List<Property>();
+
+            properties
+                .Add(new Property("q", search.TextRequest));
+
+            properties.Add(new Property("auto_complete", 
+                    (search.AutoComplete ? 1 : 0).ToString()));
+
+            properties.Add(new Property("lyrics", 
+                    (search.WithLyrics ? 1 : 0).ToString()));
+
+            properties.Add(new Property("performer_only", 
+                    (search.PerformerOnly ? 1 : 0).ToString()));
+
+            properties.Add(new Property("sort", 
+                ((int)search.SortMean).ToString()));
+
+            properties.Add(new Property("search_own", 
+                    (search.SearchOwn ? 1 : 0).ToString()));
+
+            properties.Add(new Property("offset", search.Offset.ToString()));
+
+            properties.Add(new Property("count", search.Count.ToString()));
+
+            var method = new Method("audio.search", token);
+
+            string json = await dataProvider
+                .GetJsonString(method, properties.ToArray());
+
+            JToken jToken = JToken.Parse(json);
+
+            var audioList = jToken
+                .SelectToken("response")
+                .Skip(1)
+                .Select(c => c.ToObject<Audio>())
+                .ToList();
+
+            return audioList;
         }
     }
 }

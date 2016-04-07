@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\Search.cs" />
+    <Compile Include="Audio\Value.cs" />
     <Compile Include="Authorization\Authorization.cs" />
     <Compile Include="Audio\Audio.cs" />
     <Compile Include="Data\DataProvider.cs" />
