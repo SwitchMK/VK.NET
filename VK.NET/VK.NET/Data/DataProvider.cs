@@ -12,7 +12,7 @@ namespace VK.NET
         public async Task<string> GetJsonString(Method method, params Property[] properties)
         {
             HttpClient http = new HttpClient();
-            string s = "https://api.vk.com/method/" + method.Name + "?need_user=0&" + 
+            string s = "https://api.vk.com/method/" + method.Name + "?" + 
                 String.Join("&", properties.ToList()) + "&access_token=" + method.Token;
             var task = await http.GetAsync(s);
             var json = await task.Content.ReadAsStringAsync();

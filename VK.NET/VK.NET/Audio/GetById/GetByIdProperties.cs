@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace VK.NET
 {
-    public struct Value
+    public struct GetByIdProperties
     {
         public int AudioId { get; set; }
         public int OwnerId { get; set; }
 
-        public Value(int ownerId, int audioId)
+        public GetByIdProperties(int ownerId, int audioId)
         {
             AudioId = audioId;
             OwnerId = ownerId;
