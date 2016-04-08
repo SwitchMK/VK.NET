@@ -26,7 +26,8 @@ namespace VK.NET
 
         // Getting adios from json and pushing to code
         // with collection.
-        public async static Task<List<Audio>> Get(string token, GetProperties getProperties = null)
+        public async static Task<List<Audio>> Get(string token, 
+            GetProperties getProperties = null)
         {
             string json;
 
@@ -39,10 +40,12 @@ namespace VK.NET
                 var properties = new List<Property>();
 
                 if (getProperties.OwnerId != null)
-                    properties.Add(new Property("owner_id", getProperties.OwnerId.ToString()));
+                    properties.Add(new Property("owner_id", 
+                        getProperties.OwnerId.ToString()));
 
                 if (getProperties.AlbumId != null)
-                    properties.Add(new Property("album_id", getProperties.AlbumId.ToString()));
+                    properties.Add(new Property("album_id", 
+                        getProperties.AlbumId.ToString()));
 
                 if (getProperties.AudioIds != null &&
                     getProperties.AudioIds.Length > 0)
@@ -53,18 +56,20 @@ namespace VK.NET
                     (getProperties.NeedUser ? 1 : 0).ToString()));
 
                 if (getProperties.Offset > 0)
-                    properties.Add(new Property("offset", getProperties.Offset.ToString()));
+                    properties.Add(new Property("offset", 
+                        getProperties.Offset.ToString()));
 
                 if (getProperties.Count != null)
-                    properties.Add(new Property("count", getProperties.Count.ToString()));
+                    properties.Add(new Property("count", 
+                        getProperties.Count.ToString()));
 
-                json = await dataProvider.GetJsonString(method, properties.ToArray());
+                json = await dataProvider.GetJsonString(method, 
+                    properties.ToArray());
             }
             else
             {
                 json = await dataProvider.GetJsonString(method);
             }
-            
 
             JToken jToken = JToken.Parse(json);
             var audioList = jToken["response"]
@@ -107,7 +112,8 @@ namespace VK.NET
                 var method = new Method("audio.getLyrics", token);
                 var dataProvider = new DataProvider();
                 var property = new Property("lyrics_id", lyrics_id.ToString());
-                string json = await dataProvider.GetJsonString(method, property);
+                string json = await dataProvider
+                    .GetJsonString(method, property);
 
                 var jToken = JToken.Parse(json);
                 var lyrics = jToken
@@ -123,13 +129,15 @@ namespace VK.NET
 
         // Getting audiolist by passing needed id 
         // like {owner_id}_{audio_id}
-        public static async Task<List<Audio>> GetById(string token, params GetByIdProperties[] getByIdProperties)
+        public static async Task<List<Audio>> GetById(string token, 
+            params GetByIdProperties[] getByIdProperties)
         {
             if (getByIdProperties.Length != 0)
             {
                 var method = new Method("audio.getById", token);
                 var dataProvider = new DataProvider();
-                var property = new Property("audios", String.Join(",", getByIdProperties));
+                var property = new Property("audios", 
+                    String.Join(",", getByIdProperties));
 
                 string json = await dataProvider
                     .GetJsonString(method, property);
@@ -149,7 +157,8 @@ namespace VK.NET
         }
 
         // Search method realization
-        public static async Task<List<Audio>> Search(string token, Search search)
+        public static async Task<List<Audio>> Search(string token, 
+            Search search)
         {
             var dataProvider = new DataProvider();
             var properties = new List<Property>();

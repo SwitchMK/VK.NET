@@ -49,7 +49,6 @@
     <Compile Include="Authorization\Authorization.cs" />
     <Compile Include="Audio\Audio.cs" />
     <Compile Include="Data\DataProvider.cs" />
-    <Compile Include="Data\IDataProvider.cs" />
     <Compile Include="Data\Method.cs" />
     <Compile Include="Data\Property.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

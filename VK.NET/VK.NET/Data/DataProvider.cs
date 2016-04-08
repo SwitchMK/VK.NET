@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VK.NET
 {
-    public class DataProvider : IDataProvider
+    public class DataProvider
     {
         public async Task<string> GetJsonString(Method method, params Property[] properties)
         {
