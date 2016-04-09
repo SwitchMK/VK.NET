@@ -13,7 +13,7 @@ namespace VK.NET
         Popular = 2
     }
 
-    public class Search
+    public class SearchProperties
     {
         public string TextRequest { get; set; }
         public bool AutoComplete { get; set; } 
@@ -24,7 +24,7 @@ namespace VK.NET
         public int Offset { get; set; }
         public int Count { get; set; }
 
-        public Search(string textRequest, 
+        public SearchProperties(string textRequest, 
             bool autoComplete = true, 
             bool withLyrics = false,
             bool performerOnly = false, 

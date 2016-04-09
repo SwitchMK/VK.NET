@@ -44,9 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\Add\AddProperties.cs" />
+    <Compile Include="Audio\Edit\EditProperties.cs" />
+    <Compile Include="Audio\Edit\Genre.cs" />
     <Compile Include="Audio\Get\GetProperties.cs" />
-    <Compile Include="Audio\Search\Search.cs" />
+    <Compile Include="Audio\Search\SearchProperties.cs" />
     <Compile Include="Audio\GetById\GetByIdProperties.cs" />
+    <Compile Include="Audio\StaticAudio.cs" />
     <Compile Include="Authorization\Authorization.cs" />
     <Compile Include="Audio\Audio.cs" />
     <Compile Include="Data\DataProvider.cs" />
