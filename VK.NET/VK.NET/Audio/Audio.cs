@@ -26,7 +26,7 @@ namespace VK.NET
 
         // Getting adios from json and pushing to code
         // with collection.
-        public async static Task<List<Audio>> Get(string token, 
+        public async static Task<List<Audio>> GetAsync(string token, 
             GetProperties getProperties = null)
         {
             string json;
@@ -92,7 +92,7 @@ namespace VK.NET
 
         // Overloaded method
         // Static! Getting lyrics from choosen audio by lyrics_id
-        public async static Task<string> GetLyrics(string token, string lyrics_id)
+        public async static Task<string> GetLyricsAsync(string token, string lyrics_id)
         {
             if (int.Parse(lyrics_id) != 0)
             {
@@ -115,7 +115,7 @@ namespace VK.NET
 
         // Overloaded method
         // Getting lyrics from choosen audio by lyrics_id
-        public async Task<string> GetLyrics(string token)
+        public async Task<string> GetLyricsAsync(string token)
         {
             if (lyrics_id != 0)
             {
@@ -142,7 +142,7 @@ namespace VK.NET
 
         // Getting audiolist by passing needed id 
         // like {owner_id}_{audio_id}
-        public static async Task<List<Audio>> GetById(string token, 
+        public static async Task<List<Audio>> GetByIdAsync(string token, 
             params GetByIdProperties[] getByIdProperties)
         {
             if (getByIdProperties.Length != 0)
@@ -172,7 +172,7 @@ namespace VK.NET
         }
 
         // Search method realization
-        public static async Task<List<Audio>> Search(string token, 
+        public static async Task<List<Audio>> SearchAsync(string token, 
             Search search)
         {
             var dataProvider = new DataProvider();
@@ -217,37 +217,86 @@ namespace VK.NET
             return audioList;
         }
 
-        public static async Task<int> Add(string token, AddProperties addProperties)
+        // Static realization of Add method which allows you 
+        // to add audio to your Vkontakte audiolist.
+        public static async Task<int> AddAsync(string token, int audioId, 
+            int ownerId, AddProperties addProperties = null)
         {
             var dataProvider = new DataProvider();
 
             var properties = new List<Property>();
 
             properties.Add(new Property("audio_id", 
-                addProperties.AudioId.ToString()));
+                audioId.ToString()));
 
             properties.Add(new Property("owner_id",
-                addProperties.OwnerId.ToString()));
+                ownerId.ToString()));
 
-            if (addProperties.GroupId != null)
+            if (addProperties != null)
             {
-                properties.Add(new Property("group_id",
-                    addProperties.GroupId.ToString()));
-            }
+                if (addProperties.GroupId != null)
+                {
+                    properties.Add(new Property("group_id",
+                        addProperties.GroupId.ToString()));
+                }
 
-            if (addProperties.AlbumId != null)
-            {
-                properties.Add(new Property("album_id",
-                    addProperties.AlbumId.ToString()));
+                if (addProperties.AlbumId != null)
+                {
+                    properties.Add(new Property("album_id",
+                        addProperties.AlbumId.ToString()));
+                }
             }
 
             var method = new Method("audio.add", token);
 
-            string json = await dataProvider.GetJsonString(method, properties.ToArray());
+            string json = await dataProvider
+                .GetJsonString(method, properties.ToArray());
 
             var jToken = JToken.Parse(json);
 
-            var returnedId = int.Parse(jToken.SelectToken("response").ToString());
+            var returnedId = 
+                int.Parse(jToken.SelectToken("response").ToString());
+
+            return returnedId;
+        }
+
+        // Non-static realization of Audio.Add method
+        public async Task<int> AddAsync(string token, AddProperties addProperties = null)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("audio_id",
+                aid.ToString()));
+
+            properties.Add(new Property("owner_id",
+                owner_id.ToString()));
+
+            if (addProperties != null)
+            {
+                if (addProperties.GroupId != null)
+                {
+                    properties.Add(new Property("group_id",
+                        addProperties.GroupId.ToString()));
+                }
+
+                if (addProperties.AlbumId != null)
+                {
+                    properties.Add(new Property("album_id",
+                        addProperties.AlbumId.ToString()));
+                }
+            }
+
+            var method = new Method("audio.add", token);
+
+            string json = await dataProvider
+                .GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            var returnedId = 
+                int.Parse(jToken.SelectToken("response").ToString());
 
             return returnedId;
         }
