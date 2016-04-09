@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\Add\AddProperties.cs" />
     <Compile Include="Audio\Get\GetProperties.cs" />
     <Compile Include="Audio\Search\Search.cs" />
     <Compile Include="Audio\GetById\GetByIdProperties.cs" />

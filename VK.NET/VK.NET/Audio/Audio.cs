@@ -13,7 +13,7 @@ namespace VK.NET
     public class Audio
     {
         // Properties of audio entity
-        public int id { get; set; }
+        public int aid { get; set; }
         public int owner_id { get; set; }
         public string artist { get; set; }
         public string title { get; set; }
@@ -40,28 +40,38 @@ namespace VK.NET
                 var properties = new List<Property>();
 
                 if (getProperties.OwnerId != null)
-                    properties.Add(new Property("owner_id", 
+                {
+                    properties.Add(new Property("owner_id",
                         getProperties.OwnerId.ToString()));
+                }
 
                 if (getProperties.AlbumId != null)
-                    properties.Add(new Property("album_id", 
+                {
+                    properties.Add(new Property("album_id",
                         getProperties.AlbumId.ToString()));
+                }
 
                 if (getProperties.AudioIds != null &&
                     getProperties.AudioIds.Length > 0)
+                {
                     properties.Add(new Property("audio_ids",
                         String.Join(",", getProperties.AudioIds)));
+                }
 
                 properties.Add(new Property("need_user",
                     (getProperties.NeedUser ? 1 : 0).ToString()));
 
                 if (getProperties.Offset > 0)
-                    properties.Add(new Property("offset", 
+                {
+                    properties.Add(new Property("offset",
                         getProperties.Offset.ToString()));
+                }
 
                 if (getProperties.Count != null)
-                    properties.Add(new Property("count", 
+                {
+                    properties.Add(new Property("count",
                         getProperties.Count.ToString()));
+                }
 
                 json = await dataProvider.GetJsonString(method, 
                     properties.ToArray());
@@ -110,8 +120,11 @@ namespace VK.NET
             if (lyrics_id != 0)
             {
                 var method = new Method("audio.getLyrics", token);
+
                 var dataProvider = new DataProvider();
+
                 var property = new Property("lyrics_id", lyrics_id.ToString());
+
                 string json = await dataProvider
                     .GetJsonString(method, property);
 
@@ -135,7 +148,9 @@ namespace VK.NET
             if (getByIdProperties.Length != 0)
             {
                 var method = new Method("audio.getById", token);
+
                 var dataProvider = new DataProvider();
+
                 var property = new Property("audios", 
                     String.Join(",", getByIdProperties));
 
@@ -161,6 +176,7 @@ namespace VK.NET
             Search search)
         {
             var dataProvider = new DataProvider();
+
             var properties = new List<Property>();
 
             properties
@@ -199,6 +215,41 @@ namespace VK.NET
                 .ToList();
 
             return audioList;
+        }
+
+        public static async Task<int> Add(string token, AddProperties addProperties)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("audio_id", 
+                addProperties.AudioId.ToString()));
+
+            properties.Add(new Property("owner_id",
+                addProperties.OwnerId.ToString()));
+
+            if (addProperties.GroupId != null)
+            {
+                properties.Add(new Property("group_id",
+                    addProperties.GroupId.ToString()));
+            }
+
+            if (addProperties.AlbumId != null)
+            {
+                properties.Add(new Property("album_id",
+                    addProperties.AlbumId.ToString()));
+            }
+
+            var method = new Method("audio.add", token);
+
+            string json = await dataProvider.GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            var returnedId = int.Parse(jToken.SelectToken("response").ToString());
+
+            return returnedId;
         }
     }
 }
