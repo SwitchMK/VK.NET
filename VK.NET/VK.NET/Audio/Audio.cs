@@ -300,5 +300,52 @@ namespace VK.NET
 
             return returnedId;
         }
+
+        // Allows you to delete audio from your audiolist
+        public async Task<int> DeleteAsync(string token)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("audio_id", aid.ToString()));
+
+            properties.Add(new Property("owner_id", owner_id.ToString()));
+
+            var method = new Method("audio.delete", token);
+
+            string json = await dataProvider
+                .GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            var returnedValue = int.Parse(jToken.SelectToken("response").ToString());
+
+            return returnedValue;
+        }
+
+        // Overloaded static Audio.Delete method
+        public static async Task<int> DeleteAsync(string token, int audioId, int ownerId)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("audio_id", audioId.ToString()));
+
+            properties.Add(new Property("owner_id", ownerId.ToString()));
+
+            var method = new Method("audio.delete", token);
+
+            string json = await dataProvider
+                .GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            var returnedValue = 
+                int.Parse(jToken.SelectToken("response").ToString());
+
+            return returnedValue;
+        }
     }
 }
