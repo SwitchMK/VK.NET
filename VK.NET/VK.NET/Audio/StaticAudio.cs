@@ -250,10 +250,10 @@ namespace VK.NET
             var properties = new List<Property>();
 
             properties.Add(new Property("owner_id", 
-                editProperties.OwnerId.ToString()));
+                ownerId.ToString()));
 
             properties.Add(new Property("audio_id",
-                editProperties.AudioId.ToString()));
+                audioId.ToString()));
 
             if (editProperties != null)
             {
@@ -283,6 +283,8 @@ namespace VK.NET
             var jToken = JToken.Parse(json);
 
             var result = int.Parse(jToken.SelectToken("response").ToString());
+
+            return result;
         }
     }
 }
