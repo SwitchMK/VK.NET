@@ -115,6 +115,7 @@ namespace VK.NET
             return returnedValue;
         }
 
+        // Allows you to edit some info about audio
         public async Task<int> EditAsync(string token, EditProperties editProperties = null)
         {
             var dataProvider = new DataProvider();
@@ -143,9 +144,11 @@ namespace VK.NET
 
                 properties.Add(new Property("text", editProperties.Text));
 
-                properties.Add(new Property("genre_id", ((int)editProperties.Genre).ToString()));
+                properties.Add(new Property("genre_id", 
+                    ((int)editProperties.Genre).ToString()));
 
-                properties.Add(new Property("no_search", (editProperties.NoSearch ? 1 : 0).ToString()));
+                properties.Add(new Property("no_search", 
+                    (editProperties.NoSearch ? 1 : 0).ToString()));
             }
 
             var method = new Method("audio.edit", token);
@@ -159,6 +162,7 @@ namespace VK.NET
             return result;
         }
 
+        // Allows you ti change order of audios withing audiolist
         public async Task<int> ReorderAsync(string token, 
             ReorderProperties reorderProperties = null)
         {
@@ -198,6 +202,31 @@ namespace VK.NET
             var result = int.Parse(jToken.SelectToken("response").ToString());
 
             return result;
+        }
+
+        // Allows you to restore audio if it was accidently deleted
+        public async Task<Audio> RestoreAsync(string token)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("audio_id", aid.ToString()));
+
+            properties.Add(new Property("owner_id", owner_id.ToString()));
+
+            var method = new Method("audio.restore", token);
+
+            var json = await dataProvider.GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            var audioList = jToken.SelectToken("response")
+                .Children()
+                .Select(c => c.ToObject<Audio>())
+                .ToList()[0];
+
+            return audioList;
         }
     }
 }

@@ -286,5 +286,75 @@ namespace VK.NET
 
             return result;
         }
+
+        public static async Task<int> ReorderAsync(string token, int audioId,
+            ReorderProperties reorderProperties = null)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("audio_id", audioId.ToString()));
+
+            if (reorderProperties != null)
+            {
+                if (reorderProperties.OwnerId != null)
+                {
+                    properties.Add(new Property("owner_id",
+                        reorderProperties.OwnerId.ToString()));
+                }
+
+                if (reorderProperties.Before != null)
+                {
+                    properties.Add(new Property("before",
+                        reorderProperties.Before.ToString()));
+                }
+
+                if (reorderProperties.After != null)
+                {
+                    properties.Add(new Property("after",
+                        reorderProperties.After.ToString()));
+                }
+            }
+
+            var method = new Method("audio.reorder", token);
+
+            var json = await dataProvider.GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            var result = int.Parse(jToken.SelectToken("response").ToString());
+
+            return result;
+        }
+
+        // Allows you to restore audio if it was accidently deleted
+        public static async Task<Audio> RestoreAsync(string token, 
+            int audioId, int? ownerId = null)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("audio_id", audioId.ToString()));
+
+            if (ownerId != null)
+            {
+                properties.Add(new Property("owner_id", ownerId.ToString()));
+            }
+
+            var method = new Method("audio.restore", token);
+
+            var json = await dataProvider.GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            var audioList = jToken.SelectToken("response")
+                .Children()
+                .Select(c => c.ToObject<Audio>())
+                .ToList()[0];
+
+            return audioList;
+        }
     }
 }
