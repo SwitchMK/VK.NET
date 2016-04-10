@@ -114,5 +114,90 @@ namespace VK.NET
 
             return returnedValue;
         }
+
+        public async Task<int> EditAsync(string token, EditProperties editProperties = null)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("owner_id",
+                owner_id.ToString()));
+
+            properties.Add(new Property("audio_id",
+                aid.ToString()));
+
+            if (editProperties != null)
+            {
+                if (!String.IsNullOrEmpty(editProperties.Artist))
+                {
+                    properties.Add(new Property("artist",
+                        editProperties.Artist));
+                }
+
+                if (!String.IsNullOrEmpty(editProperties.Title))
+                {
+                    properties.Add(new Property("title",
+                        editProperties.Title));
+                }
+
+                properties.Add(new Property("text", editProperties.Text));
+
+                properties.Add(new Property("genre_id", ((int)editProperties.Genre).ToString()));
+
+                properties.Add(new Property("no_search", (editProperties.NoSearch ? 1 : 0).ToString()));
+            }
+
+            var method = new Method("audio.edit", token);
+
+            var json = await dataProvider.GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            var result = int.Parse(jToken.SelectToken("response").ToString());
+
+            return result;
+        }
+
+        public async Task<int> ReorderAsync(string token, 
+            ReorderProperties reorderProperties = null)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("audio_id", aid.ToString()));
+
+            if (reorderProperties != null)
+            {
+                if (reorderProperties.OwnerId != null)
+                {
+                    properties.Add(new Property("owner_id",
+                        reorderProperties.OwnerId.ToString()));
+                }
+
+                if (reorderProperties.Before != null)
+                {
+                    properties.Add(new Property("before",
+                        reorderProperties.Before.ToString()));
+                }
+
+                if (reorderProperties.After != null)
+                {
+                    properties.Add(new Property("after",
+                        reorderProperties.After.ToString()));
+                }
+            }
+
+            var method = new Method("audio.reorder", token);
+
+            var json = await dataProvider.GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            var result = int.Parse(jToken.SelectToken("response").ToString());
+
+            return result;
+        }
     }
 }
