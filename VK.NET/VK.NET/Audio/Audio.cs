@@ -30,17 +30,17 @@ namespace VK.NET
         {
             if (lyrics_id != 0)
             {
-                var method = new Method("audio.getLyrics", token);
-
                 var dataProvider = new DataProvider();
 
                 var property = new Property("lyrics_id", lyrics_id.ToString());
+
+                var method = new Method("audio.getLyrics", token);
 
                 string json = await dataProvider
                     .GetJsonString(method, property);
 
                 var jToken = JToken.Parse(json);
-                var lyrics = jToken
+                string lyrics = jToken
                     .SelectToken("response")
                     .SelectToken("text")
                     .Value<string>();
@@ -86,7 +86,7 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            var returnedId = 
+            int returnedId = 
                 int.Parse(jToken.SelectToken("response").ToString());
 
             return returnedId;
@@ -110,7 +110,7 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            var returnedValue = int.Parse(jToken.SelectToken("response").ToString());
+            int returnedValue = int.Parse(jToken.SelectToken("response").ToString());
 
             return returnedValue;
         }
@@ -157,7 +157,7 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            var result = int.Parse(jToken.SelectToken("response").ToString());
+            int result = int.Parse(jToken.SelectToken("response").ToString());
 
             return result;
         }
@@ -199,7 +199,7 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            var result = int.Parse(jToken.SelectToken("response").ToString());
+            int result = int.Parse(jToken.SelectToken("response").ToString());
 
             return result;
         }
@@ -221,12 +221,12 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            var audioList = jToken.SelectToken("response")
+            Audio audio = jToken.SelectToken("response")
                 .Children()
                 .Select(c => c.ToObject<Audio>())
                 .ToList()[0];
 
-            return audioList;
+            return audio;
         }
     }
 }

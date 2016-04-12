@@ -119,7 +119,7 @@ namespace VK.NET
                 string json = await dataProvider.GetJsonString(method, property);
 
                 var jToken = JToken.Parse(json);
-                var lyrics = jToken
+                string lyrics = jToken
                     .SelectToken("response")
                     .SelectToken("text")
                     .Value<string>();
@@ -167,7 +167,7 @@ namespace VK.NET
 
             JToken jToken = JToken.Parse(json);
 
-            var audioList = jToken
+            List<Audio> audioList = jToken
                 .SelectToken("response")
                 .Skip(1)
                 .Select(c => c.ToObject<Audio>())
@@ -213,7 +213,7 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            var returnedId =
+            int returnedId =
                 int.Parse(jToken.SelectToken("response").ToString());
 
             return returnedId;
@@ -237,7 +237,7 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            var returnedValue =
+            int returnedValue =
                 int.Parse(jToken.SelectToken("response").ToString());
 
             return returnedValue;
@@ -283,7 +283,7 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            var result = int.Parse(jToken.SelectToken("response").ToString());
+            int result = int.Parse(jToken.SelectToken("response").ToString());
 
             return result;
         }
@@ -324,7 +324,7 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            var result = int.Parse(jToken.SelectToken("response").ToString());
+            int result = int.Parse(jToken.SelectToken("response").ToString());
 
             return result;
         }
@@ -350,7 +350,7 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            var audioList = jToken.SelectToken("response")
+            Audio audioList = jToken.SelectToken("response")
                 .Children()
                 .Select(c => c.ToObject<Audio>())
                 .ToList()[0];
@@ -358,8 +358,8 @@ namespace VK.NET
             return audioList;
         }
 
-        public static async Task<List<Album>> GetAlbumsAsync(string token, 
-            int? ownerId = null, 
+        public static async Task<List<Album>> GetAlbumsAsync(string token,
+            int? ownerId = null,
             int? offset = null,
             int? count = null)
         {
@@ -388,13 +388,13 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            var albumList = jToken.SelectToken("response")
+            List<Album> albumList = jToken.SelectToken("response")
                 .Children()
                 .Skip(1)
                 .Select(c => c.ToObject<Album>())
                 .ToList();
 
             return albumList;
-        } 
+        }
     }
 }
