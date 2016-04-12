@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\Add\AddProperties.cs" />
+    <Compile Include="Audio\Album.cs" />
     <Compile Include="Audio\Edit\EditProperties.cs" />
     <Compile Include="Audio\Edit\Genre.cs" />
     <Compile Include="Audio\Get\GetProperties.cs" />

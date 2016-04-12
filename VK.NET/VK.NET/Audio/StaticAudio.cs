@@ -67,6 +67,7 @@ namespace VK.NET
             }
 
             JToken jToken = JToken.Parse(json);
+
             var audioList = jToken["response"]
                 .Children()
                 .Select(c => c.ToObject<Audio>())
@@ -356,5 +357,44 @@ namespace VK.NET
 
             return audioList;
         }
+
+        public static async Task<List<Album>> GetAlbumsAsync(string token, 
+            int? ownerId = null, 
+            int? offset = null,
+            int? count = null)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            if (ownerId != null)
+            {
+                properties.Add(new Property("owner_id", ownerId.ToString()));
+            }
+
+            if (offset != null)
+            {
+                properties.Add(new Property("offset", offset.ToString()));
+            }
+
+            if (count != null)
+            {
+                properties.Add(new Property("count", count.ToString()));
+            }
+
+            var method = new Method("audio.getAlbums", token);
+
+            var json = await dataProvider.GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            var albumList = jToken.SelectToken("response")
+                .Children()
+                .Skip(1)
+                .Select(c => c.ToObject<Album>())
+                .ToList();
+
+            return albumList;
+        } 
     }
 }
