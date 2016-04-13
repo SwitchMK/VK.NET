@@ -29,6 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\..\Users\maxim\Desktop\Newtonsoft.Json.dll</HintPath>
@@ -46,8 +47,11 @@
     <Compile Include="Audio\Add\AddProperties.cs" />
     <Compile Include="Audio\Album.cs" />
     <Compile Include="Audio\Edit\EditProperties.cs" />
-    <Compile Include="Audio\Edit\Genre.cs" />
+    <Compile Include="Audio\Genre.cs" />
+    <Compile Include="Audio\GetPopular\GetPopularProperties.cs" />
+    <Compile Include="Audio\GetRecommendations\GetRecommendationsProperties.cs" />
     <Compile Include="Audio\Get\GetProperties.cs" />
+    <Compile Include="Audio\MoveToAlbum\MoveToAlbumProperties.cs" />
     <Compile Include="Audio\Reorder\ReorderProperties.cs" />
     <Compile Include="Audio\Search\SearchProperties.cs" />
     <Compile Include="Audio\GetById\GetByIdProperties.cs" />

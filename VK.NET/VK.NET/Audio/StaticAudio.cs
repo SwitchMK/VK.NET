@@ -68,7 +68,7 @@ namespace VK.NET
 
             JToken jToken = JToken.Parse(json);
 
-            var audioList = jToken["response"]
+            List<Audio> audioList = jToken["response"]
                 .Children()
                 .Select(c => c.ToObject<Audio>())
                 .ToList();
@@ -95,7 +95,7 @@ namespace VK.NET
 
                 var jToken = JToken.Parse(json);
 
-                var partialAudiosList = jToken
+                List<Audio> partialAudiosList = jToken
                     .SelectToken("response")
                     .Children()
                     .Select(a => a.ToObject<Audio>())
@@ -272,9 +272,11 @@ namespace VK.NET
 
                 properties.Add(new Property("text", editProperties.Text));
 
-                properties.Add(new Property("genre_id", ((int)editProperties.Genre).ToString()));
+                properties.Add(new Property("genre_id", 
+                    ((int)editProperties.Genre).ToString()));
 
-                properties.Add(new Property("no_search", (editProperties.NoSearch ? 1 : 0).ToString()));
+                properties.Add(new Property("no_search", 
+                    (editProperties.NoSearch ? 1 : 0).ToString()));
             }
 
             var method = new Method("audio.edit", token);
@@ -358,6 +360,7 @@ namespace VK.NET
             return audioList;
         }
 
+        // Allows you to get all albums
         public static async Task<List<Album>> GetAlbumsAsync(string token,
             int? ownerId = null,
             int? offset = null,
@@ -384,7 +387,8 @@ namespace VK.NET
 
             var method = new Method("audio.getAlbums", token);
 
-            var json = await dataProvider.GetJsonString(method, properties.ToArray());
+            var json = 
+                await dataProvider.GetJsonString(method, properties.ToArray());
 
             var jToken = JToken.Parse(json);
 
@@ -395,6 +399,243 @@ namespace VK.NET
                 .ToList();
 
             return albumList;
+        }
+
+        // Allows you to add new album
+        public static async Task<int> AddAlbumAsync(string token, string title, 
+            int? groupId = null)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("title", title));
+
+            if (groupId != null)
+            {
+                properties.Add(new Property("group_id", groupId.ToString()));
+            }
+
+            var method = new Method("audio.addAlbum", token);
+
+            string json = 
+                await dataProvider.GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            int result = int.Parse(jToken.SelectToken("response")
+                .ToString());
+
+            return result;
+        }
+
+        // Allows you to edit album (e.g. change the title)
+        public static async Task<int> EditAlbumAsync(string token, 
+            string title, int albumId,
+            int? groupId = null)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("album_id", albumId.ToString()));
+
+            properties.Add(new Property("title", title));
+
+            if (groupId != null)
+            {
+                properties.Add(new Property("group_id", groupId.ToString()));
+            }
+
+            var method = new Method("audio.editAlbum", token);
+
+            string json = 
+                await dataProvider.GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            int result = int.Parse(jToken.SelectToken("response")
+                .ToString());
+
+            return result;
+        }
+
+        // Allows you to remove needed albums by album_id
+        public static async Task<int> DeleteAlbumAsync(string token,
+          int albumId, int? groupId = null)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("album_id", albumId.ToString()));
+
+            if (groupId != null)
+            {
+                properties.Add(new Property("group_id", groupId.ToString()));
+            }
+
+            var method = new Method("audio.deleteAlbum", token);
+
+            string json = 
+                await dataProvider.GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            int result = int.Parse(jToken.SelectToken("response")
+                .ToString());
+
+            return result;
+        }
+
+        // Allows you to move chosen audio to another album
+        public static async Task<int> MoveToAlbumAsync(string token,
+            MoveToAlbumProperties moveToAlbumProperties)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            properties.Add(new Property("audio_ids",
+                String.Join(",", moveToAlbumProperties.AudioIds)));
+
+            if (moveToAlbumProperties.AlbumId != null)
+            {
+                properties.Add(new Property("album_id", 
+                    moveToAlbumProperties.AlbumId.ToString()));
+            }
+
+            if (moveToAlbumProperties.GroupId != null)
+            {
+                properties.Add(new Property("group_id",
+                    moveToAlbumProperties.GroupId.ToString()));
+            }
+
+            var method = new Method("audio.moveToAlbum", token);
+
+            string json = await dataProvider.GetJsonString(method, properties.ToArray());
+
+            var jToken = JToken.Parse(json);
+
+            int result = int.Parse(jToken
+                .SelectToken("response").ToString());
+
+            return result;
+        }
+
+        // Provide recommendations which are similar to you audioList
+        public static async Task<List<Audio>> GetRecommentationsAsync(string token, 
+            GetRecommendationsProperties getRecommendationsProperties = null)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            var method = new Method("audio.getRecommendations", token);
+
+            string json;
+
+            if (getRecommendationsProperties != null)
+            {
+                if (getRecommendationsProperties.TargetAudio != null)
+                {
+                    properties.Add(new Property("target_audio",
+                        getRecommendationsProperties.TargetAudio.ToString()));
+                }
+
+                if (getRecommendationsProperties.UserId != null)
+                {
+                    properties.Add(new Property("user_id",
+                        getRecommendationsProperties.UserId.ToString()));
+                }
+
+                properties.Add(new Property("offset",
+                    getRecommendationsProperties.Offset.ToString()));
+
+                properties.Add(new Property("count",
+                    getRecommendationsProperties.Count.ToString()));
+
+                properties.Add(new Property("shuffle",
+                    (getRecommendationsProperties.Shuffle ? 1 : 0)
+                    .ToString()));
+
+                json = await dataProvider.GetJsonString(method, properties.ToArray());
+            }
+            else
+            {
+                json = await dataProvider.GetJsonString(method);
+            }
+
+            var jToken = JToken.Parse(json);
+
+            List<Audio> audioList = jToken
+               .SelectToken("response")
+               .Select(c => c.ToObject<Audio>())
+               .ToList();
+
+            return audioList;
+        }
+
+        // Provide what is the most popular at the moment
+        public static async Task<List<Audio>> GetPopularAsync(string token, 
+            GetPopularProperties getPopularProperties = null)
+        {
+            var dataProvider = new DataProvider();
+
+            var properties = new List<Property>();
+
+            var method = new Method("audio.getPopular", token);
+
+            string json;
+
+            if (getPopularProperties != null)
+            {
+                properties.Add(new Property("only_eng",
+                    (getPopularProperties.EnglishOnly ? 1 : 0).ToString()));
+
+                properties.Add(new Property("genre_id",
+                    ((int)(getPopularProperties.Genre)).ToString()));
+
+                properties.Add(new Property("offset",
+                    getPopularProperties.Offset.ToString()));
+
+                properties.Add(new Property("count",
+                    getPopularProperties.Count.ToString()));
+
+                json = await dataProvider.GetJsonString(method, properties.ToArray());
+            }
+            else
+            {
+                json = await dataProvider.GetJsonString(method);
+            }
+
+            var jToken = JToken.Parse(json);
+
+            List<Audio> audioList = jToken["response"]
+                .Children()
+                .Select(c => c.ToObject<Audio>())
+                .ToList();
+
+            return audioList;
+        }
+
+        // Total amount of audios in user's or group's audiolist
+        public static async Task<int> GetCountAsync(string token, int ownerId)
+        {
+            var dataProvider = new DataProvider();
+
+            var property = new Property("owner_id", ownerId.ToString());
+
+            var method = new Method("audio.getCount", token);
+
+            string json = await dataProvider.GetJsonString(method, property);
+
+            var jToken = JToken.Parse(json);
+
+            int result = int.Parse(jToken
+                .SelectToken("response").ToString());
+
+            return result;
         }
     }
 }
