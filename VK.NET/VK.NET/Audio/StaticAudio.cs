@@ -68,7 +68,8 @@ namespace VK.NET
 
             JToken jToken = JToken.Parse(json);
 
-            List<Audio> audioList = jToken["response"]
+            List<Audio> audioList = jToken
+                .SelectToken("response")
                 .Children()
                 .Select(c => c.ToObject<Audio>())
                 .ToList();
@@ -392,7 +393,8 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            List<Album> albumList = jToken.SelectToken("response")
+            List<Album> albumList = jToken
+                .SelectToken("response")
                 .Children()
                 .Skip(1)
                 .Select(c => c.ToObject<Album>())
@@ -602,7 +604,8 @@ namespace VK.NET
                 properties.Add(new Property("count",
                     getPopularProperties.Count.ToString()));
 
-                json = await dataProvider.GetJsonString(method, properties.ToArray());
+                json = await dataProvider
+                    .GetJsonString(method, properties.ToArray());
             }
             else
             {
@@ -611,7 +614,8 @@ namespace VK.NET
 
             var jToken = JToken.Parse(json);
 
-            List<Audio> audioList = jToken["response"]
+            List<Audio> audioList = jToken
+                .SelectToken("response")
                 .Children()
                 .Select(c => c.ToObject<Audio>())
                 .ToList();

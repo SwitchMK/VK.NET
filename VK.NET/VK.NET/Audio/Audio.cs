@@ -153,11 +153,13 @@ namespace VK.NET
 
             var method = new Method("audio.edit", token);
 
-            var json = await dataProvider.GetJsonString(method, properties.ToArray());
+            var json = await dataProvider
+                .GetJsonString(method, properties.ToArray());
 
             var jToken = JToken.Parse(json);
 
-            int result = int.Parse(jToken.SelectToken("response").ToString());
+            int result = int.Parse(jToken
+                               .SelectToken("response").ToString());
 
             return result;
         }
@@ -217,7 +219,8 @@ namespace VK.NET
 
             var method = new Method("audio.restore", token);
 
-            var json = await dataProvider.GetJsonString(method, properties.ToArray());
+            var json = 
+                await dataProvider.GetJsonString(method, properties.ToArray());
 
             var jToken = JToken.Parse(json);
 
