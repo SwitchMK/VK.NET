@@ -44,28 +44,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Audio\Add\AddProperties.cs" />
-    <Compile Include="Audio\Album.cs" />
-    <Compile Include="Audio\Edit\EditProperties.cs" />
-    <Compile Include="Audio\Genre.cs" />
-    <Compile Include="Audio\GetPopular\GetPopularProperties.cs" />
-    <Compile Include="Audio\GetRecommendations\GetRecommendationsProperties.cs" />
-    <Compile Include="Audio\Get\GetProperties.cs" />
-    <Compile Include="Audio\MoveToAlbum\MoveToAlbumProperties.cs" />
-    <Compile Include="Audio\Reorder\ReorderProperties.cs" />
-    <Compile Include="Audio\Search\SearchProperties.cs" />
-    <Compile Include="Audio\GetById\GetByIdProperties.cs" />
-    <Compile Include="Audio\StaticAudio.cs" />
+    <Compile Include="Models\Audio\Add\AddProperties.cs" />
+    <Compile Include="Models\Audio\Album.cs" />
+    <Compile Include="Models\Audio\Audio.cs" />
+    <Compile Include="Models\Audio\Edit\EditProperties.cs" />
+    <Compile Include="Models\Audio\Genre.cs" />
+    <Compile Include="Models\Audio\GetPopular\GetPopularProperties.cs" />
+    <Compile Include="Models\Audio\GetRecommendations\GetRecommendationsProperties.cs" />
+    <Compile Include="Models\Audio\Get\GetProperties.cs" />
+    <Compile Include="Models\Audio\MoveToAlbum\MoveToAlbumProperties.cs" />
+    <Compile Include="Models\Audio\Reorder\ReorderProperties.cs" />
+    <Compile Include="Models\Audio\Search\SearchProperties.cs" />
+    <Compile Include="Models\Audio\GetById\GetByIdProperties.cs" />
     <Compile Include="Authorization\Authorization.cs" />
-    <Compile Include="Audio\Audio.cs" />
+    <Compile Include="Repositories\AudioRepository.cs" />
     <Compile Include="Data\DataProvider.cs" />
     <Compile Include="Data\Method.cs" />
     <Compile Include="Data\Property.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Users\User.cs" />
+    <Compile Include="Models\Users\User.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Friend\" />
+    <Folder Include="Models\Friend\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
